@@ -1,6 +1,8 @@
 package org.prcode.web;
 
 import com.alibaba.fastjson.JSON;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.apache.log4j.Logger;
@@ -51,10 +53,15 @@ public class DredgeController {
     @ApiOperation(value="查询维修类型", notes="查询全部维修类型")
     @GetMapping("/dredgeTypeList")
     @ResponseBody
-    public List<DredgeType> getDredgeTypeList(){
+    @Cacheable(value = "dredgeTypeList:ice", sync = true)
+    public String getDredgeTypeList(){
         DredgeTypeExample example = new DredgeTypeExample();
         example.createCriteria().andSysDelStateEqualTo(false).andNameLike("%冰箱%");
-        return dredgeTypeMapper.selectByExample(example);
+        Page<Object> objects = PageHelper.startPage(1, 2);
+        List<DredgeType> dredgeTypes = dredgeTypeMapper.selectByExample(example);
+        System.out.println("一共有" + objects.getTotal());
+        System.out.println("objects======" + JSON.toJSONString(objects));
+        return JSON.toJSONString(dredgeTypes);
     }
 
     @ApiOperation(value="查询维修类型", notes="查询指定ID维修类型")
@@ -63,7 +70,6 @@ public class DredgeController {
     @ResponseBody
     public DredgeType getDredgeTypeById(@PathVariable Long id) {
         DredgeType type = dredgeTypeMapper.selectByPrimaryKey(id);
-        System.out.println(stringRedisTemplate.opsForValue().get("dredgeTypeId_" + id.toString()));
         stringRedisTemplate.opsForValue().set("dredgeTypeId_" + id.toString(), JSON.toJSONString(type),1, TimeUnit.MINUTES);
         return type;
     }
