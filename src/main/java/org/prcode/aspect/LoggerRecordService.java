@@ -1,7 +1,7 @@
 package org.prcode.aspect;
 
-import org.prcode.basedomain.log.commLogger.dao.CommLoggerMapper;
-import org.prcode.basedomain.log.commLogger.domain.CommLogger;
+import org.prcode.log.basedomain.commLogger.dao.CommLoggerMapper;
+import org.prcode.log.basedomain.commLogger.domain.CommLogger;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 

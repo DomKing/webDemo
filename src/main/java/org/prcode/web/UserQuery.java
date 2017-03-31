@@ -1,7 +1,7 @@
 package org.prcode.web;
 
 import org.hibernate.validator.constraints.Length;
-import org.prcode.busi.support.basic.group.Search;
+import org.prcode.business.support.basic.group.Search;
 
 /**
  * @ClassName: UserQuery
@@ -20,4 +20,5 @@ public class UserQuery {
     public void setName(String name) {
         this.name = name;
     }
+
 }

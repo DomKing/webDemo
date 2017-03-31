@@ -1,12 +1,13 @@
 package org.prcode.web;
 
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.apache.log4j.Logger;
-import org.prcode.basedomain.business.user.dao.UserMapper;
-import org.prcode.basedomain.business.user.domain.User;
-import org.prcode.basedomain.business.user.domain.UserExample;
-import org.prcode.busi.support.basic.group.Search;
-import org.prcode.busi.support.basic.util.BindingResultUtil;
+import org.prcode.business.basedomain.user.dao.UserMapper;
+import org.prcode.business.basedomain.user.domain.UserExample;
+import org.prcode.business.support.basic.group.Search;
+import org.prcode.business.support.basic.mail.SimpleMailSender;
+import org.prcode.business.support.basic.util.BindingResultUtil;
 import org.prcode.utility.basic.JsonResponse;
 import org.prcode.utility.exception.ValidateException;
 import org.prcode.utility.util.StringUtil;
@@ -20,7 +21,8 @@ import org.springframework.web.servlet.ModelAndView;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.annotation.Resource;
-import java.util.List;
+import java.util.Arrays;
+import java.util.HashMap;
 
 
 /**
@@ -35,6 +37,9 @@ public class DemoController {
 
     @Resource
     private UserMapper userMapper;
+
+    @Resource
+    private SimpleMailSender simpleMailSender;
 
     @ApiIgnore
     @GetMapping("")
@@ -55,5 +60,18 @@ public class DemoController {
         JsonResponse json = new JsonResponse();
         json.putData("list", userMapper.selectByExample(example));
         return json;
+    }
+
+    @GetMapping("/sendMail.json")
+    @ResponseBody
+    public JsonResponse sendMail() throws Exception {
+        String subject = "test";
+        String sendTo = "943697653@qq.com,";
+        String copyTo = "beixianchen@gmail.com,";
+        String template = "mail/demo.ftl";
+        HashMap<String, Object> map = new HashMap<>(1);
+        map.put("username", "kangduo");
+        simpleMailSender.sendTemplateMail(subject, Arrays.asList(sendTo.split(",")), Arrays.asList(copyTo.split(",")), template, map);
+        return new JsonResponse();
     }
 }

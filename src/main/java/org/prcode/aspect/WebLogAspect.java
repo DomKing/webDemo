@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import org.apache.log4j.Logger;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
-import org.prcode.basedomain.log.commLogger.domain.CommLogger;
+import org.prcode.log.basedomain.commLogger.domain.CommLogger;
 import org.prcode.utility.util.ExceptionUtil;
 import org.prcode.utility.util.IPUtil;
 import org.springframework.beans.factory.annotation.Autowired;
