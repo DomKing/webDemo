@@ -70,8 +70,7 @@ public class WebLogAspect {
         commLogger.setReqEndTime(new Date());
         commLogger.setReqDealTime((int) (commLogger.getReqEndTime().getTime() - commLogger.getReqStartTime().getTime()));
         commLogger.setResponseData(JSON.toJSONString(ret));
-        commLogger.setActionResStatus("1");
-        commLogger.setIsUndefinedException((byte) 2);
+        commLogger.setIsUndefinedException(false);
 
         commLoggerService.doRecord(commLogger);
 
@@ -86,8 +85,7 @@ public class WebLogAspect {
         CommLogger commLogger = commLoggerThreadLocal.get();
         commLogger.setReqEndTime(new Date());
         commLogger.setReqDealTime((int) (commLogger.getReqEndTime().getTime() - commLogger.getReqStartTime().getTime()));
-        commLogger.setActionResStatus("2");
-        commLogger.setIsUndefinedException((byte) 1);
+        commLogger.setIsUndefinedException(true);
         commLogger.setExcepStackInfo(ExceptionUtil.parseException(ex));
 
         commLoggerService.doRecord(commLogger);
