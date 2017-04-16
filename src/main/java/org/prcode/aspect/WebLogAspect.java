@@ -5,6 +5,11 @@ import org.apache.log4j.Logger;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.prcode.log.basedomain.commLogger.domain.CommLogger;
+import org.prcode.utility.basic.support.ResponseStatus;
+import org.prcode.utility.exception.BusinessException;
+import org.prcode.utility.exception.LoginTimeout;
+import org.prcode.utility.exception.NoPrivilegeException;
+import org.prcode.utility.exception.ValidateException;
 import org.prcode.utility.util.ExceptionUtil;
 import org.prcode.utility.util.IPUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,6 +72,7 @@ public class WebLogAspect {
     public void doAfterReturning(Object ret) throws Throwable {
         // 处理完请求，返回内容
         CommLogger commLogger = commLoggerThreadLocal.get();
+        commLogger.setActionResCode(ResponseStatus.SUCCESS);
         commLogger.setReqEndTime(new Date());
         commLogger.setReqDealTime((int) (commLogger.getReqEndTime().getTime() - commLogger.getReqStartTime().getTime()));
         commLogger.setResponseData(JSON.toJSONString(ret));
@@ -83,6 +89,17 @@ public class WebLogAspect {
     public void doAfterThrowing(Throwable ex) {
         //有异常
         CommLogger commLogger = commLoggerThreadLocal.get();
+        if (ex instanceof BusinessException) {
+            commLogger.setActionResCode(ResponseStatus.BUSINESS_FAILED);
+        } else if (ex instanceof ValidateException) {
+            commLogger.setActionResCode(ResponseStatus.VALIDATE_ERR);
+        } else if (ex instanceof LoginTimeout) {
+            commLogger.setActionResCode(ResponseStatus.LOGIN_TIME_OUT);
+        } else if (ex instanceof NoPrivilegeException) {
+            commLogger.setActionResCode(ResponseStatus.NO_PRIVILEGE);
+        } else {
+            commLogger.setActionResCode(ResponseStatus.SYSTEM_ERR);
+        }
         commLogger.setReqEndTime(new Date());
         commLogger.setReqDealTime((int) (commLogger.getReqEndTime().getTime() - commLogger.getReqStartTime().getTime()));
         commLogger.setIsUndefinedException(true);

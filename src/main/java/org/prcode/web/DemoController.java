@@ -54,14 +54,6 @@ public class DemoController {
     @Resource
     private RedisTemplate<String, User> redisTemplate;
 
-    @ApiIgnore
-    @GetMapping("")
-    public ModelAndView index() {
-        ModelAndView mav = new ModelAndView("index");
-        mav.addObject("txt", "abc");
-        return mav;
-    }
-
     @GetMapping("/userListByPage.json")
     @ResponseBody
     @ApiOperation(value = "分页查询用户列表", notes = "不传分页默认1页15条")
@@ -77,13 +69,13 @@ public class DemoController {
         BindingResultUtil.validateResult(bindingResult);
         Page<Object> objects = PageHelper.startPage(pageKey.getPage(), pageKey.getPageSize(), true);
         UserExample example = new UserExample();
-        example.createCriteria().andNickNameLike(StringUtil.turn2LikeStr(user.getName()));
+        example.createCriteria().andUserNameLike(StringUtil.turn2LikeStr(user.getName()));
         JsonResponse json = new JsonResponse();
         List<User> users = userMapper.selectByExample(example);
         json.putData("list", users);
         System.out.println("**********共有" + objects.getTotal() + "条数据*********");
 
-        redisTemplate.opsForList().rightPushAll("userList", users);
+//        redisTemplate.opsForList().rightPushAll("userList", users);
         return json;
     }
 
