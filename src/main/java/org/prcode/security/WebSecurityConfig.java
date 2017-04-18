@@ -4,7 +4,7 @@ import org.prcode.business.support.basic.security.config.CsrfSecurityRequestMatc
 import org.prcode.business.support.basic.security.config.CustomerAccessDecisionManager;
 import org.prcode.business.support.basic.security.config.CustomerFilterSecurityInterceptor;
 import org.prcode.business.support.basic.security.config.CustomerSecurityMetadataSource;
-import org.prcode.business.support.basic.security.dao.SecurityDao;
+import org.prcode.business.support.basic.security.service.ISecurityService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -33,7 +33,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Resource
     private CsrfSecurityRequestMatcher csrfSecurityRequestMatcher;
     @Resource
-    private SecurityDao securityDao;
+    private ISecurityService securityService;
     @Resource
     private AuthenticationManager authenticationManager;
 
@@ -45,11 +45,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public CustomerAccessDecisionManager customerAccessDecisionManager() {
-        return new CustomerAccessDecisionManager(securityDao);
+        return new CustomerAccessDecisionManager(securityService);
     }
     @Bean
     public CustomerSecurityMetadataSource customerSecurityMetadataSource() {
-        return new CustomerSecurityMetadataSource(securityDao);
+        return new CustomerSecurityMetadataSource(securityService);
     }
     @Bean
     public CustomerFilterSecurityInterceptor customerFilterSecurityInterceptor() {

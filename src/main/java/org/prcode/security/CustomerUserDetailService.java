@@ -1,7 +1,7 @@
 package org.prcode.security;
 
-import org.prcode.business.support.basic.security.dao.SecurityDao;
 import org.prcode.business.support.basic.security.domain.CustomerUserDetail;
+import org.prcode.business.support.basic.security.service.ISecurityService;
 import org.prcode.business.support.basic.security.util.SecurityUtil;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -23,13 +23,13 @@ import javax.servlet.http.HttpServletRequest;
 public class CustomerUserDetailService implements UserDetailsService {
 
     @Resource
-    private SecurityDao securityDao;
+    private ISecurityService securityService;
 
     public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
         Integer accountType = Integer.valueOf(request.getParameter(SecurityUtil.ACCOUNT_TYPE));
-        CustomerUserDetail customerUserDetail = securityDao.getUserDetailByName(name, accountType);
+        CustomerUserDetail customerUserDetail = securityService.getUserDetailByName(name, accountType);
         if (customerUserDetail == null) {
             throw new UsernameNotFoundException("用户不存在或密码错误");
         }

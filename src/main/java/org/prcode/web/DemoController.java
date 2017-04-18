@@ -17,14 +17,13 @@ import org.prcode.utility.basic.JsonResponse;
 import org.prcode.utility.basic.PageKey;
 import org.prcode.utility.exception.ValidateException;
 import org.prcode.utility.util.StringUtil;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
-import springfox.documentation.annotations.ApiIgnore;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
@@ -93,13 +92,14 @@ public class DemoController {
 
     @GetMapping("paramValue.json")
     @ResponseBody
+    @Cacheable(value = "demo:param" ,key = "#p0")
     public String getParamValue(String param) {
 //        PageHelper.startPage(1, 10, true);
-        busiSupportCacheService.getCommSysParaValue(param);
+        String commSysParaValue = busiSupportCacheService.getCommSysParaValue(param);
 //        busiSupportCacheService.getOmsCommSysParaValue(param);
 //        busiSupportCacheService.updCommSysParaValue(param, "123abc");
 //        busiSupportCacheService.delCommSysParaValue(param);
 //        busiSupportCacheService.refreshSysParaCache();
-        return "success";
+        return commSysParaValue;
     }
 }
