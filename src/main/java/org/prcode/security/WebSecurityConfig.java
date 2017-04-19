@@ -45,7 +45,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public CustomerAccessDecisionManager customerAccessDecisionManager() {
-        return new CustomerAccessDecisionManager();
+        return new CustomerAccessDecisionManager(securityService);
     }
     @Bean
     public CustomerSecurityMetadataSource customerSecurityMetadataSource() {

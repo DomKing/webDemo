@@ -71,6 +71,12 @@
 			<artifactId>spring-session-data-redis</artifactId>
 		</dependency>
 
+		<!--thymeleaf中使用springsecurity标签要用这个-->
+		<dependency>
+			<groupId>org.thymeleaf.extras</groupId>
+			<artifactId>thymeleaf-extras-springsecurity4</artifactId>
+		</dependency>
+
         <!--spring cache 加注解自动缓存到数据库-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
