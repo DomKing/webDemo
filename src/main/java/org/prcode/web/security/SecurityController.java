@@ -1,5 +1,6 @@
 package org.prcode.web.security;
 
+import org.prcode.business.support.basic.security.util.SecurityUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +21,9 @@ public class SecurityController {
 
     @GetMapping(value = "/login")
     public String login() {
+        if (SecurityUtil.getOperId() != null) {
+            return "redirect:/";
+        }
         return "login";
     }
 
